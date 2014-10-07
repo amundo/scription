@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+  <title>scription</title>
+  <meta charset=utf-8>
+  <script src=js/jquery.js></script>
+  <script src=js/underscore.js></script>
+  <script src=js/backbone.js></script>
+  <script src=js/json2csv.js></script>
+</head>
+
+<style>
+/* 
+
+  These CSS (Cascading Style Sheets) rules define the appearance
+  of the elements on the page.
+
+*/
+
+main { 
+  text-align:center;
+}
+
+h1 { 
+  position: fixed;
+  font-size:small;
+  right: 1em;
+  color:#ccc;
+  font-family: sans-serif;
+
+}
+
+textarea { 
+  width: 90%;  
+  font-size: 1.5em;
+  padding: .5em;
+  min-height: 300px;
+}
+
+#plain { 
+  font-family: "Gentium Plus";
+}
+
+#json { 
+  font-family: "Courier New";
+}
+
+button { 
+  font-size: 2em;
+}
+</style>
+
+<body>
+
+<header>
+  <h1>scription</h1>
+</header>
+
+<main>
+  <textarea id=scription></textarea>
+  <br>
+  <button id=convert>Convert</button>
+  <textarea id=json></textarea>
+  <br>
+  <button id=toCSV>to CSV</button>
+  <textarea id=csv></textarea>
+</main>
+
+
+
+<script>
+/* 
+
+   This is the Javascript that adds behavior to the application
+   and handles format conversion. 
+
+*/
+
+
+/*
+  Just a useful way to view data structures as a string
+  in the console. Do not use at home.
+*/
+function show(obj){
+  console.log(JSON.stringify(obj, null, 2));
+}
+
+var scriptionBox = document.querySelector('#scription'),
+    jsonBox = document.querySelector('#json'),
+    csvBox = document.querySelector('#csv'),
+    convertButton = document.querySelector('#convert'),
+    toCSVButton = document.querySelector('#toCSV');
+
+function stanza2sentence(stanza, fields){
+
+   var sentence = {};
+
+   //stanza = stanza.trim().split(/\n/);
+
+   fields.forEach(function(k, i){
+     sentence[k] = stanza[i];
+   })
+
+   return sentence;
+
+}
+
+// remove edge whitespace from keys and values
+function stripDict(d){
+  var fixed = {};
+  for (var k in d){
+    fixed[k.trim()] = d[k].trim()
+  }
+  return fixed;
+}
+
+function stripData(data){
+  return data.map(stripDict);
+}
+
+/*
+
+  Listen for user to click convert button, then run conversion.
+
+*/
+
+convertButton.addEventListener('click', function(event){
+
+   var chunks = scriptionBox.value.trim().split(/\n\n+/),
+       stanzas = chunks.map(function(c){ return c.trim().split(/\n/g)}); //,
+       fields = stanzas[0];
+
+   stanzas = stanzas.slice(1, stanzas.length);
+   stanzas = stripData(stanzas);
+
+   var sentences = stanzas.map(function(s){ return stanza2sentence(s, fields)} );
+
+   var fields = stanzas[0];
+  
+   jsonBox.value = JSON.stringify(sentences, null, 2);
+
+}, false)
+
+toCSVButton.addEventListener('click', function(event){
+
+   var json = JSON.parse(jsonBox.value);
+   var chunks = scriptionBox.value.trim().split(/\n\n+/),
+       stanzas = chunks.map(function(c){ return c.trim().split(/\n/g)}); //,
+       fields = stanzas[0];
+
+   csvBox.value = json2csv(json, fields);
+
+}, false)
+
+</script>
+
+</body>
+</html>
