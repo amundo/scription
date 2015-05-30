@@ -120,4 +120,15 @@ describe("Scription", function() {
       }
      ]);
   });
+
+  it("creates an analysis", function() {
+    var input = 'es\nen\n\nÁ kotóo-ni yó’ó?';
+        result = scription.parse(input);
+    expect(result.analysis).toEqual([
+      {token: "á", gloss: "Q"},
+      {token: "kotóo-ni", gloss: "like.2S.FORM"},
+      {token: "yó’ó", gloss: "here"},
+    ]);
+  })
+
 });
