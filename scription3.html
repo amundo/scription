@@ -38,7 +38,13 @@ main aside textarea#schema {
 
 main section { 
   display:flex;
+  flex-direction:column;
   flex:8;
+}
+
+main section button { 
+  align-self: flex-end;
+  margin: 1em 2em 0;
 }
 
 main section textarea#scription { 
@@ -70,6 +76,7 @@ main section textarea#scription {
   </aside>
   
   <section>
+    <button>export</button>
     <textarea spellcheck=false id=scription></textarea>
   </section>
 
@@ -80,6 +87,7 @@ main section textarea#scription {
 var 
   schema = document.querySelector('textarea#schema'),
   box = document.querySelector('textarea#scription'),
+  button = document.querySelector('button'),
   scription = new Scription();  
 
 box.addEventListener('keyup', function(ev){
@@ -94,6 +102,20 @@ box.addEventListener('keyup', function(ev){
     }
   }
 })
+
+var saveAs = (filename, text) => {
+  var a         = document.createElement('a');
+  
+  a.href        = 'data:attachment/text,' +  encodeURIComponent(text);
+  a.target      = '_blank';
+  a.download    = filename;
+  
+  document.body.appendChild(a);
+  a.click();
+}
+
+
+button.addEventListener('click', () => saveAs('yourdata.json', box.value))
 
 </script>
 
