@@ -106,7 +106,7 @@ box.addEventListener('keyup', function(ev){
 var saveAs = (filename, text) => {
   var a         = document.createElement('a');
   
-  a.href        = 'data:attachment/text,' +  encodeURIComponent(text);
+  a.href        = 'data:application/json;;charset=utf-8,' +  encodeURIComponent(text);
   a.target      = '_blank';
   a.download    = filename;
   
