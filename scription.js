@@ -1,24 +1,21 @@
 class Scription {
   constructor() {}
+
   _parseField(field) {
     return field
   }
+
   _getSchema(input) {
     let first = this.parse(input)[0]
     let fields = Object.keys(first)
     fields.sort()
     return fields
   }
+
   _label(fields, values) {
     let labeled = {}
 
-    function isDotted(field) {
-      return field.indexOf(".") > 0
-    }
-    function isEllipsed(field) {
-      let ellipseIndex = field.trim().indexOf("...") ||
-        field.trim().indexOf("…")
-    }
+    let isDotted = field => field.includes('.')
 
     // handle dotted fields
     fields.forEach(function (field, i) {
@@ -38,6 +35,7 @@ class Scription {
     })
     return labeled
   }
+  
   _parseIntoStanzas(input) {
     let stanzas = []
     return input
